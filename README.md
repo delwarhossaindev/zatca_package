@@ -8,8 +8,8 @@ Onboard a device, sign the invoice and report or clear it, in a few lines of Lar
 
 <br>
 
-[![PHP](https://img.shields.io/badge/PHP-8.1%2B-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net)
-[![Laravel](https://img.shields.io/badge/Laravel-10%20|%2011%20|%2012-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
+[![PHP](https://img.shields.io/badge/PHP-8.3%2B-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net)
+[![Laravel](https://img.shields.io/badge/Laravel-10%20|%2011%20|%2012%20|%2013-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com)
 [![ZATCA](https://img.shields.io/badge/ZATCA-Phase%202-006C35?style=for-the-badge&logoColor=white)](https://zatca.gov.sa)
 [![Tests](https://img.shields.io/badge/Sandbox%20Tests-Passing-success?style=for-the-badge&logo=githubactions&logoColor=white)](#-testing)
 [![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)](LICENSE)
