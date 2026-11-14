@@ -68,7 +68,8 @@ class ZatcaManager
 
     public function generateCsr(ZatcaDevice $device): void
     {
-        if ($device->icv > 0) {
+        // A device with an expired certificate cannot renew and is onboarded again; ICV / PIH continue unchanged
+        if ($device->icv > 0 && $device->hasProductionCsid() && ! $device->certificateExpired()) {
             throw new ZatcaException('This device has already issued invoices. Use renew() to get a new certificate.');
         }
 
@@ -245,36 +246,50 @@ class ZatcaManager
      */
     public function submit(ZatcaDocument $document): array
     {
-        if ($document->isAccepted()) {
-            throw new ZatcaException("Document {$document->invoice_number} was already {$document->status}.");
+        [$summary, $temporary] = DB::transaction(function () use ($document) {
+            // Lock the row so issueAndSubmit() and zatca:submit-pending never send the same document twice
+            $locked = ZatcaDocument::query()->lockForUpdate()->findOrFail($document->getKey());
+            $document->setRawAttributes($locked->getAttributes(), true);
+
+            if ($document->isAccepted()) {
+                throw new ZatcaException("Document {$document->invoice_number} was already {$document->status}.");
+            }
+
+            $device = $document->device;
+            $api = $this->api($device);
+            $payload = $this->payload($document->uuid, $document->invoice_hash, $document->signed_xml);
+
+            try {
+                $response = $document->isSimplified()
+                    ? $api->report($device->production_certificate, $device->production_secret, $payload)
+                    : $api->clear($device->production_certificate, $device->production_secret, $payload);
+            } catch (ConnectionException $e) {
+                // Leave the document pending so it can be retried (zatca:submit-pending)
+                throw new ZatcaException('Could not reach ZATCA: '.$e->getMessage(), 0, $e);
+            }
+
+            $summary = ZatcaApi::summarize($response);
+            $temporary = ZatcaApi::isTemporaryFailure($response);
+
+            if (! $temporary && $cleared = $response->json('clearedInvoice')) {
+                // The cleared invoice is stamped by ZATCA and carries ZATCA's QR code
+                $document->cleared_xml = base64_decode($cleared);
+                $document->qr_code = $this->extractQr($document->cleared_xml) ?? $document->qr_code;
+            }
+
+            $document->fill([
+                // ZATCA did not judge the document (server error / rate limit): keep it pending for a retry
+                'status' => $temporary ? ZatcaDocument::STATUS_PENDING : $summary['status'],
+                'response' => ['summary' => $summary, 'zatca' => $response->json() ?? ['body' => $response->body()]],
+                'submitted_at' => now(),
+            ])->save();
+
+            return [$summary, $temporary];
+        });
+
+        if ($temporary) {
+            throw new ZatcaException("ZATCA is temporarily unavailable (HTTP {$summary['http']}). Document {$document->invoice_number} stays pending and will be retried.");
         }
-
-        $device = $document->device;
-        $api = $this->api($device);
-        $payload = $this->payload($document->uuid, $document->invoice_hash, $document->signed_xml);
-
-        try {
-            $response = $document->isSimplified()
-                ? $api->report($device->production_certificate, $device->production_secret, $payload)
-                : $api->clear($device->production_certificate, $device->production_secret, $payload);
-        } catch (ConnectionException $e) {
-            // Leave the document pending so it can be retried (zatca:submit-pending)
-            throw new ZatcaException('Could not reach ZATCA: '.$e->getMessage(), 0, $e);
-        }
-
-        $summary = ZatcaApi::summarize($response);
-
-        if ($cleared = $response->json('clearedInvoice')) {
-            // The cleared invoice is stamped by ZATCA and carries ZATCA's QR code
-            $document->cleared_xml = base64_decode($cleared);
-            $document->qr_code = $this->extractQr($document->cleared_xml) ?? $document->qr_code;
-        }
-
-        $document->fill([
-            'status' => $summary['status'],
-            'response' => ['summary' => $summary, 'zatca' => $response->json() ?? ['body' => $response->body()]],
-            'submitted_at' => now(),
-        ])->save();
 
         return $summary;
     }

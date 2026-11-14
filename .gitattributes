@@ -1,0 +1,8 @@
+# The signed XML is built from PHP strings; CRLF checkouts would break the signature hash
+* text=auto eol=lf
+
+/tests export-ignore
+/phpunit.xml export-ignore
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/ZATCA-API.postman_collection.json export-ignore

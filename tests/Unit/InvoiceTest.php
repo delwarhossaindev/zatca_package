@@ -55,6 +55,31 @@ class InvoiceTest extends TestCase
         new InvoiceLine('Medicine', 1, 10, InvoiceLine::ZERO_RATED, 0);
     }
 
+    public function test_standard_invoice_requires_buyer_vat_number_or_identification(): void
+    {
+        $address = new Address('Main', '1111', 'Al-Murooj', 'Riyadh', '12222');
+
+        new InvoiceData('INV-1', InvoiceData::STANDARD, [new InvoiceLine('Pen', 1, 10)], new Buyer('ACME', identification: '1010010000', identificationScheme: 'CRN', address: $address));
+
+        $this->expectException(ZatcaException::class);
+        new InvoiceData('INV-2', InvoiceData::STANDARD, [new InvoiceLine('Pen', 1, 10)], new Buyer('ACME', address: $address));
+    }
+
+    public function test_only_sar_is_supported(): void
+    {
+        $this->expectException(ZatcaException::class);
+
+        new InvoiceData('INV-1', InvoiceData::SIMPLIFIED, [new InvoiceLine('Pen', 1, 10)], currency: 'USD');
+    }
+
+    public function test_qr_values_longer_than_255_bytes_are_refused(): void
+    {
+        QrCode::encode([1 => str_repeat('a', 255)]);
+
+        $this->expectException(ZatcaException::class);
+        QrCode::encode([1 => str_repeat('ب', 128)]); // 256 bytes in UTF-8
+    }
+
     public function test_qr_code_round_trip(): void
     {
         $qr = QrCode::encode([1 => 'Al Noor', 2 => '399999999900003', 3 => '2026-11-14T10:00:00', 4 => '115.00', 5 => '15.00']);

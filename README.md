@@ -330,6 +330,11 @@ $order->zatcaDocuments;           // 📚 invoice + its credit / debit notes
 | 🔄 `zatca:onboard {device} --renew` | Renew the Production CSID |
 | 📤 `zatca:submit-pending` | Send documents that have not reached ZATCA yet |
 | 📊 `zatca:status` | Devices, certificate expiry, last ICV, pending count |
+| 📮 `zatca:payload {document}` | `invoiceHash`, `uuid` and `invoice` of a document for the Postman collection |
+| 🔑 `zatca:payload --device={id}` | CSR and CSID credentials of a device for the Postman collection |
+
+> If ZATCA answers with a server error (5xx) or a rate limit (429), the document stays `pending` and `zatca:submit-pending` sends it again.
+> The Postman collection (`ZATCA-API.postman_collection.json`) is in the GitHub repository, not in the Composer package.
 
 <br>
 
@@ -351,7 +356,7 @@ $order->zatcaDocuments;           // 📚 invoice + its credit / debit notes
 - [ ] 🧾 Send one small real invoice and check it is ✅ accepted
 - [ ] 💾 Back up `.env` (`APP_KEY`) and the database
 - [ ] ⏰ Schedule `zatca:submit-pending`
-- [ ] 📅 Watch `zatca:status` and renew before the certificate expires
+- [ ] 📅 Watch `zatca:status` and renew before the certificate expires (an expired device is onboarded again with `zatca:onboard`; the ICV / PIH chain continues)
 
 <br>
 

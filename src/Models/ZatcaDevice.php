@@ -63,6 +63,11 @@ class ZatcaDevice extends Model
         return $this->hasCsr() && $this->hasProductionCsid();
     }
 
+    public function certificateExpired(): bool
+    {
+        return $this->production_expires_at !== null && $this->production_expires_at->isPast();
+    }
+
     public function previousInvoiceHash(): string
     {
         return $this->previous_invoice_hash ?: self::INITIAL_PIH;

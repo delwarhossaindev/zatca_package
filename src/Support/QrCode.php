@@ -2,6 +2,8 @@
 
 namespace delwarhossaindev\Zatca\Support;
 
+use delwarhossaindev\Zatca\Exceptions\ZatcaException;
+
 /**
  * Builds the TLV encoded, base64 QR code payload.
  *
@@ -20,6 +22,10 @@ class QrCode
             }
 
             // ZATCA uses a single byte for the tag and the length
+            if (strlen($value) > 255) {
+                throw new ZatcaException("QR tag $tag is ".strlen($value).' bytes long; ZATCA allows at most 255.');
+            }
+
             $tlv .= chr($tag).chr(strlen($value)).$value;
         }
 

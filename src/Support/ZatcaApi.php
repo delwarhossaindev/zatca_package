@@ -116,6 +116,14 @@ class ZatcaApi
         ];
     }
 
+    /**
+     * Server error or rate limit: ZATCA did not validate the document, so it can be sent again.
+     */
+    public static function isTemporaryFailure(Response $response): bool
+    {
+        return $response->serverError() || $response->status() === 429;
+    }
+
     public static function ensureSuccessful(Response $response, string $step): void
     {
         if ($response->successful()) {

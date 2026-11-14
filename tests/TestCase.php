@@ -3,6 +3,7 @@
 namespace delwarhossaindev\Zatca\Tests;
 
 use delwarhossaindev\Zatca\Models\ZatcaDevice;
+use delwarhossaindev\Zatca\Models\ZatcaDocument;
 use delwarhossaindev\Zatca\ZatcaServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Orchestra\Testbench\TestCase as Orchestra;
@@ -40,5 +41,25 @@ abstract class TestCase extends Orchestra
             'industry' => 'Supply activities',
             'invoice_types' => '1100',
         ]);
+    }
+
+    protected function makeDocument(ZatcaDevice $device, string $number, array $attributes = []): ZatcaDocument
+    {
+        $document = new ZatcaDocument($attributes + [
+            'invoice_number' => $number,
+            'uuid' => fake()->uuid(),
+            'invoice_type' => 'simplified',
+            'document_type' => 'invoice',
+            'icv' => 1,
+            'previous_invoice_hash' => ZatcaDevice::INITIAL_PIH,
+            'invoice_hash' => base64_encode(random_bytes(32)),
+            'total_amount' => 115,
+            'vat_amount' => 15,
+            'signed_xml' => '<Invoice/>',
+            'qr_code' => 'qr',
+        ]);
+        $document->device()->associate($device)->save();
+
+        return $document;
     }
 }

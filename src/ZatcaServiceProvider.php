@@ -4,6 +4,7 @@ namespace delwarhossaindev\Zatca;
 
 use Illuminate\Support\ServiceProvider;
 use delwarhossaindev\Zatca\Console\OnboardCommand;
+use delwarhossaindev\Zatca\Console\PayloadCommand;
 use delwarhossaindev\Zatca\Console\StatusCommand;
 use delwarhossaindev\Zatca\Console\SubmitPendingCommand;
 
@@ -29,6 +30,7 @@ class ZatcaServiceProvider extends ServiceProvider
                 OnboardCommand::class,
                 SubmitPendingCommand::class,
                 StatusCommand::class,
+                PayloadCommand::class,
             ]);
         }
     }

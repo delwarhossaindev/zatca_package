@@ -125,8 +125,7 @@ class InvoiceSigner
         // The block starts at column 36 in the document; the first line is already indented there
         return collect($lines)
             ->map(fn ($line, $i) => ($i === 0 ? '' : str_repeat(' ', 36 + $line[0] * 4)).$line[1])
-            ->implode("
-");
+            ->implode("\n");
     }
 
     private function ublExtensions(): string

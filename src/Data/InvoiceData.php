@@ -171,5 +171,14 @@ final class InvoiceData
         if (! $this->isSimplified() && (! $this->buyer || ! $this->buyer->address)) {
             throw new ZatcaException('Standard invoices need the buyer name and address.');
         }
+
+        if (! $this->isSimplified() && ! filled($this->buyer->vatNumber) && ! filled($this->buyer->identification)) {
+            throw new ZatcaException('Standard invoices need the buyer VAT number or another buyer identification.');
+        }
+
+        // Amounts in another currency would also need the VAT total converted to SAR, which is not supported
+        if ($this->currency !== 'SAR') {
+            throw new ZatcaException("Only SAR invoices are supported, got \"{$this->currency}\".");
+        }
     }
 }
