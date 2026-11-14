@@ -109,20 +109,20 @@ flowchart LR
 ## 📦 Installation
 
 > [!NOTE]
-> Until the package is on Packagist, install it from a local folder.
+> Until the package is on Packagist, install it from GitHub. Supports Laravel 10, 11, 12 and 13.
 
 **1️⃣** Add the repository to your Laravel app's `composer.json`:
 
 ```json
 "repositories": [
-    { "type": "path", "url": "../zatca_app/package" }
+    { "type": "vcs", "url": "https://github.com/delwarhossaindev/zatca_package" }
 ]
 ```
 
 **2️⃣** Install it and create the tables:
 
 ```bash
-composer require delwarhossaindev/laravel-zatca:@dev
+composer require delwarhossaindev/laravel-zatca:^1.0
 php artisan migrate
 ```
 

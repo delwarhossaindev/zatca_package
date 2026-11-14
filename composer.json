@@ -6,7 +6,9 @@
     "keywords": ["laravel", "zatca", "fatoora", "e-invoicing", "saudi", "vat", "ubl"],
     "authors": [
         {
-            "name": "NexaTech Solutions"
+            "name": "Delwar Hossain",
+            "email": "delwarhossain1103104@gmail.com",
+            "homepage": "https://github.com/delwarhossaindev"
         }
     ],
     "require": {
@@ -15,14 +17,14 @@
         "ext-dom": "*",
         "ext-openssl": "*",
         "guzzlehttp/guzzle": "^7.5",
-        "illuminate/console": "^10.0|^11.0|^12.0",
-        "illuminate/database": "^10.0|^11.0|^12.0",
-        "illuminate/http": "^10.0|^11.0|^12.0",
-        "illuminate/support": "^10.0|^11.0|^12.0"
+        "illuminate/console": "^10.0|^11.0|^12.0|^13.0",
+        "illuminate/database": "^10.0|^11.0|^12.0|^13.0",
+        "illuminate/http": "^10.0|^11.0|^12.0|^13.0",
+        "illuminate/support": "^10.0|^11.0|^12.0|^13.0"
     },
     "require-dev": {
-        "orchestra/testbench": "^8.0|^9.0|^10.0",
-        "phpunit/phpunit": "^10.0|^11.0"
+        "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0",
+        "phpunit/phpunit": "^10.0|^11.0|^12.0"
     },
     "autoload": {
         "psr-4": {
