@@ -104,6 +104,9 @@ flowchart LR
     E ==> F
 ```
 
+> [!TIP]
+> 📘 বাংলা গাইড: [docs/ZATCA-Guide-Bangla.pdf](docs/ZATCA-Guide-Bangla.pdf) — কোন ফাইল কী কাজ করে, কীভাবে ব্যবহার করবেন, আর সাধারণ error-এর সমাধান।
+
 <br>
 
 ## 📦 Installation
