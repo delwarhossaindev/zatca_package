@@ -1,0 +1,49 @@
+{
+    "name": "delwarhossaindev/laravel-zatca",
+    "description": "ZATCA (Fatoora) e-invoicing Phase 1 & Phase 2 for Laravel: onboarding, UBL XML, XAdES signing, QR code, reporting and clearance.",
+    "type": "library",
+    "license": "MIT",
+    "keywords": ["laravel", "zatca", "fatoora", "e-invoicing", "saudi", "vat", "ubl"],
+    "authors": [
+        {
+            "name": "NexaTech Solutions"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "ext-bcmath": "*",
+        "ext-dom": "*",
+        "ext-openssl": "*",
+        "guzzlehttp/guzzle": "^7.5",
+        "illuminate/console": "^10.0|^11.0|^12.0",
+        "illuminate/database": "^10.0|^11.0|^12.0",
+        "illuminate/http": "^10.0|^11.0|^12.0",
+        "illuminate/support": "^10.0|^11.0|^12.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^8.0|^9.0|^10.0",
+        "phpunit/phpunit": "^10.0|^11.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "delwarhossaindev\\Zatca\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "delwarhossaindev\\Zatca\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "delwarhossaindev\\Zatca\\ZatcaServiceProvider"
+            ],
+            "aliases": {
+                "Zatca": "delwarhossaindev\\Zatca\\Facades\\Zatca"
+            }
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
